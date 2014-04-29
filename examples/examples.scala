@@ -89,18 +89,17 @@ object TutorialExamples {
 	      c => new StackDaisyTests(c)}
 	  case "GCDWrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new GCDWrapper)){
-	      c => new GCDDaisyTests(c)}
+	      c => new GCDWrapperTests(c)}
 	  case "Adder4Wrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new Adder4Wrapper)){
-	      c => new GCDDaisyTests(c)}
+	      c => new Adder4WrapperTests(c)}
 	  case "RiscWrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new RiscWrapper)){
-	      c => new GCDDaisyTests(c)}
+	      c => new RiscWrapperTests(c)}
 	  case "MultiClockDomainWrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new MultiClockDomainWrapper)){
-	      c => new GCDDaisyTests(c)}
+	      c => new MultiClockDomainWrapperTests(c)}
 	}
-      }
     } else {
 	args(0) match {
 	  case "GCD" =>
