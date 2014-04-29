@@ -41,6 +41,7 @@ class Router extends Module {
       io.in.deq(); io.outs(idx).enq(pkt)
     }
   } 
+  counter(Negedge, io.writes.valid, io.in.valid)
 }
 
 class RouterTests(c: Router) extends Tester(c) {  

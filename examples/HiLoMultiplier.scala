@@ -13,6 +13,7 @@ class HiLoMultiplier() extends Module {
   val mult = io.A * io.B
   io.Lo := mult(15, 0)
   io.Hi := mult(31, 16)
+  counter(Activity, mult)
 }
 
 class HiLoMultiplierTests(c: HiLoMultiplier) extends Tester(c) {

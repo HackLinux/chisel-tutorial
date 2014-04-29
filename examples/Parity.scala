@@ -13,6 +13,9 @@ class Parity extends Module {
     .otherwise              { state := s_even }
   }
   io.out := (state === s_odd)
+  counter(Ones, io.in)
+  counter(Zeros, io.out)
+  counter(Activity, state)
 }
 
 class ParityTests(c: Parity) extends Tester(c) {

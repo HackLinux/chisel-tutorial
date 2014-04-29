@@ -50,6 +50,8 @@ class SimpleALU extends Module {
   } .otherwise {
     io.output := io.b        //PASS B
   }
+  counter(Ones, io.opcode)
+  counter(Default, io.output)
 }
 
 class SimpleALUTests(c: SimpleALU) extends Tester(c) {  

@@ -25,6 +25,9 @@ class Echo extends Module {
 
   val outUnsigned = out + UInt(128) // convert back to excess-128 format
   io.out := outUnsigned
+
+  counter(Activity, pos, out)
+  counter(inSigned, outUnsigned)
 }
 
 class EchoTests(c: Echo, val infilename: String, val outfilename: String) extends Tester(c) {  

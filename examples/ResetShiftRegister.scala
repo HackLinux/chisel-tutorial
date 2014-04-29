@@ -20,6 +20,7 @@ class ResetShiftRegister extends Module {
     r3 := r2
   }
   io.out := r3
+  counter(r0, r1, r2, r3)
 }
 
 class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c) {  

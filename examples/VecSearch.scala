@@ -13,6 +13,8 @@ class VecSearch extends Module {
   // elts(index) := index
   index := index + UInt(1)
   io.out := elts(index)
+  counter(Activity, index)
+  counter(io.out)
 }
 
 class VecSearchTests(c: VecSearch) extends Tester(c) {

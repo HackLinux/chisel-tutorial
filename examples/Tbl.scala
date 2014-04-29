@@ -9,6 +9,7 @@ class Tbl extends Module {
   }
   val r = Vec(Range(0, 256).map(UInt(_, width = 8)))
   io.out := r(io.addr)
+  counter(Activity, io.addr)
 }
 
 class TblTests(c: Tbl) extends Tester(c) {

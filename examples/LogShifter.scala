@@ -31,6 +31,8 @@ class LogShifter extends Module {
   } .otherwise {
     io.out := s2
   }
+  counter(Activity, s0, s1, s2)
+  counter(Negedge, io.shamt)
 }
 
 class LogShifterTests(c: LogShifter) extends Tester(c) {

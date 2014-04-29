@@ -12,6 +12,7 @@ class ShiftRegister extends Module {
   val r2 = Reg(next = r1)
   val r3 = Reg(next = r2)
   io.out := r3
+  counter(Ones, r0, r1, r2, r3)
 }
 
 class ShiftRegisterTests(c: ShiftRegister) extends Tester(c) {  

@@ -8,6 +8,11 @@ class ByteSelector extends Module {
     val offset = UInt(INPUT, 2)
     val out    = UInt(OUTPUT, 8)
   }
+  val a = io.in(7,0)
+  val b = io.in(15,8)
+  val c = io.in(23,16)
+  val d = io.in(31,24)
+
   io.out := UInt(0, width=8)
   when (io.offset === UInt(0, width=2)) {
     io.out := io.in(7,0)
@@ -18,6 +23,9 @@ class ByteSelector extends Module {
   } .otherwise {
     io.out := io.in(31,24)
   }
+
+  counter(Negedge, io.offset)
+  counter(Zeros, a, b, c, d)
 }
 
 class ByteSelectorTests(c: ByteSelector) extends Tester(c) {

@@ -11,6 +11,8 @@ class Functional extends Module {
   def clb(a: Bits, b: Bits, c: Bits, d: Bits) =
     (a & b) | (~c & d)
   io.z := clb(io.x, io.y, io.x, io.y)
+  counter(Activity, io.x, io.y)
+  counter(io.z)
 }
 
 class FunctionalTests(c: Functional) extends Tester(c) {

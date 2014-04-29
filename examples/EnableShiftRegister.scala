@@ -24,6 +24,8 @@ class EnableShiftRegister extends Module {
     r3 := r2
   }
   io.out := r3
+  counter(Posedge, r0, r1, r2, r3)
+  counter(Activity, io.shift)
 }
 
 class EnableShiftRegisterTests(c: EnableShiftRegister) extends Tester(c) {  

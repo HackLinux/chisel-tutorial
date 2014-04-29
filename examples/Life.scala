@@ -20,6 +20,8 @@ class Cell(isBorn: Boolean) extends Module {
     isAlive := Bool(true)
   }
   io.out := isAlive
+  counter(Ones, isAlive)
+  counter(count)
 }
 
 class Life(val n: Int) extends Module {

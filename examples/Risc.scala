@@ -48,6 +48,8 @@ class Risc extends Module {
     }
     pc := pc + UInt(1)
   }
+  counter(Activity, ra, rb, rc)
+  counter(Ones, pc)
 }
 
 class RiscTests(c: Risc) extends Tester(c) {  

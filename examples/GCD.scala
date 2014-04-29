@@ -17,6 +17,11 @@ class GCD extends Module {
   when (io.e) { x := io.a; y := io.b }
   io.z := x
   io.v := y === UInt(0)
+  counter(Ones, io.a, io.b)
+  counter(Posedge, io.e)
+  counter(Negedge, io.z)
+  counter(Zeros, io.v)
+  counter(Default, x, y)
 }
 
 class GCDTests(c: GCD) extends Tester(c) {

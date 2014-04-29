@@ -36,6 +36,10 @@ class Adder4 extends Module {
   Adder3.io.cin := Adder2.io.cout
   io.Sum := Cat(Adder3.io.sum, s2).toUInt()
   io.Cout := Adder3.io.cout
+
+  counter(Ones, io.A, io.B)
+  counter(Zeros, io.Cin, io.Cout)
+  counter(s0, s1, s2, io.Sum)
 }
 
 class Adder4Tests(c: Adder4) extends Tester(c) {  

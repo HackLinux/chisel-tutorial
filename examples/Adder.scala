@@ -29,6 +29,11 @@ class Adder(val n:Int) extends Module {
   }
   io.Sum := sum.toBits().toUInt()
   io.Cout := carry(n)
+
+  for (i <- 1 until n + 1)
+    counter(Posedge, carry(i))
+  for (i <- 1 until n)
+    counter(Negedge, sum(i))
 }
 
 class AdderTests(c: Adder) extends Tester(c) {

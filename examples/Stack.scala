@@ -31,6 +31,9 @@ class Stack(val depth: Int) extends Module {
   }
 
   io.dataOut := dataOut
+  counter(Activity, sp)
+  counter(Ones, dataOut)
+  counter(Posedge, io.en)
 }
 
 class StackTests(c: Stack) extends Tester(c) {  
