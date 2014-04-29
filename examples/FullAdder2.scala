@@ -23,3 +23,7 @@ class FullAdder2 extends Module {
 
 class FullAdder2Tests(c: FullAdder2) extends Tester(c) {  
 }
+
+// same as FullAdder2Tests but extends DaisyTester
+class FullAdder2DaisyTests(c: FullAdder2) extends DaisyTester(c) {  
+}

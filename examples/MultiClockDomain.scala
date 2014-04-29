@@ -68,3 +68,77 @@ class MultiClockDomainTests(c: MultiClockDomain) extends Tester(c) {
   }
 }
 
+// same as MultiClockDomainTests but extends DaisyTester
+class MultiClockDomainDaisyTests(c: MultiClockDomain) extends DaisyTester(c) {
+  // setting up clocks
+  val clocks = new HashMap[Clock, Int]
+  clocks(Driver.implicitClock) = 2
+  clocks(c.fastClock) = 4
+  clocks(c.slowClock) = 6
+  setClocks(clocks)
+
+  // out of reset, but not starting accumulators yet
+  for (i <- 0 until 5) {
+    poke(c.io.start,     0)
+    poke(c.io.sum.ready, 0)
+    step(1)
+  }
+
+  val answers = Array(0, 0, 1, 3, 6, 10, 15, 21, 28, 36)
+  while (t < 10) {
+    poke(c.io.start,     1)
+    poke(c.io.sum.ready, 1)
+    step(1)
+    println("DELTA " + delta)
+    // only check outputs on valid && 6 deltas have passed
+    if (peek(c.io.sum.valid) == 1 && (delta % 6 == 0)) {
+      expect(c.io.sum.bits, answers(t))
+    }
+  }
+}
+
+class MultiClockDomainWrapper extends DaisyWrapper(new MultiClockDomain) {
+  // write(0) -> { MultiClockDomain.io.sum.ready, MultiClockDomain.io.start }
+  val in_reg = Reg(UInt())
+  when (wen(0)) {
+    in_reg := io.in.bits
+  }
+  top.io.start     := in_reg(0)
+  top.io.sum.ready := in_reg(1)
+
+  // read(0) -> MultiClockDomain.io.sum.bits
+  rdata(0) := top.io.sum.bits
+  rvalid(0) := Bool(true)
+
+  // rdata(1) -> MultiClockDomain.io.sum.valid
+  rdata(1) := top.io.sum.valid
+  rvalid(1) := Bool(true)
+}
+
+class MultiClockDomainWrapperTests(c: MultiClockDomainWrapper) extends DaisyWrapperTester(c) {
+  // setting up clocks
+  val clocks = new HashMap[Clock, Int]
+  clocks(Driver.implicitClock) = 2
+  clocks(c.top.fastClock) = 4
+  clocks(c.top.slowClock) = 6
+  setClocks(clocks)
+
+  // out of reset, but not starting accumulators yet
+  for (i <- 0 until 5) {
+    // c.io.start <- 0, c.io.sum.ready <-0
+    pokeAddr(0, 0 | 0 << 1)
+    step(1)
+  }
+
+  val answers = Array(0, 0, 1, 3, 6, 10, 15, 21, 28, 36)
+  while (t < 10) {
+    // c.io.start <- 1, c.io.sum.ready <-1
+    pokeAddr(0, 1 | 1 << 1)
+    step(1)
+    println("DELTA " + delta)
+    // only check outputs on valid && 6 deltas have passed
+    if (peekAddr(1) == 1 && (delta % 6 == 0)) {
+      expectAddr(0, answers(t)) // c.io.sum.bits = ?
+    }
+  }
+}

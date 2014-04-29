@@ -22,3 +22,12 @@ class VecSearchTests(c: VecSearch) extends Tester(c) {
     expect(c.io.out, elt)
   }
 }
+
+// same as VecSearchTests but extends DaisyTester
+class VecSearchDaisyTests(c: VecSearch) extends DaisyTester(c) {
+  val list = c.elts.map(int(_)) 
+  for (elt <- list) {
+    step(1)
+    expect(c.io.out, elt)
+  }
+}

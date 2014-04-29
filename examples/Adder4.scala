@@ -53,3 +53,51 @@ class Adder4Tests(c: Adder4) extends Tester(c) {
     expect(c.io.Cout, rsum(4).litValue())
   }
 }
+
+// same as Adder4Tests but extends DaisyTester
+class Adder4DaisyTests(c: Adder4) extends DaisyTester(c) {  
+  val rnd2 = rnd.nextInt(2)
+  for (t <- 0 until 4) {
+    val rnd0 = rnd.nextInt(16)
+    val rnd1 = rnd.nextInt(16)
+    val rnd2 = rnd.nextInt(2)
+    poke(c.io.A,   rnd0)
+    poke(c.io.B,   rnd1)
+    poke(c.io.Cin, rnd2)
+    step(1)
+    val rsum = UInt(rnd0 & 0xF) + UInt(rnd1 & 0xF) + UInt(rnd2 & 0x1)
+    expect(c.io.Sum, rsum(3, 0).litValue())
+    expect(c.io.Cout, rsum(4).litValue())
+  }
+}
+
+
+class Adder4Wrapper extends DaisyWrapper(new Adder4) {
+  // write 0 -> { Adder.io.Cin, Adder4.io.A, Adder4.io.B }
+  val in_reg_0 = Reg(UInt())
+  when (wen(0)) {
+    in_reg_0 := io.in.bits
+  }
+  top.io.A   := in_reg_0(7, 4)
+  top.io.B   := in_reg_0(3, 0)
+  top.io.Cin := in_reg_0(8)
+  wready(0)  := Bool(true)
+
+  // read 0 -> { Adder4.io.Cout, Adder4.io.Sum }
+  rdata(0) := Cat(top.io.Cout, top.io.Sum)
+  rvalid(0) := Bool(true)
+}
+
+class Adder4WrapperTests(c: Adder4Wrapper) extends DaisyWrapperTester(c) {
+  val rnd2 = rnd.nextInt(2)
+  for (t <- 0 until 4) {
+    val rnd0 = rnd.nextInt(16)
+    val rnd1 = rnd.nextInt(16)
+    val rnd2 = rnd.nextInt(2)
+    pokeAddr(0, rnd2 << 8 | rnd0 << 4 | rnd1)
+    step(1)
+    val rsum = UInt(rnd0 & 0xF) + UInt(rnd1 & 0xF) + UInt(rnd2 & 0x1)
+    expectAddr(0, rsum.litValue())
+  }
+}
+

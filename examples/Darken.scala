@@ -26,3 +26,20 @@ class DarkenTests(c: Darken, val infilename: String, val outfilename: String) ex
   outPic.write(outfilename)
   ok = true
 }
+
+// same as DarkenTests but extends DaisyTester
+class DarkenDaisyTests(c: Darken, val infilename: String, val outfilename: String) extends DaisyTester(c, false) {  
+  val inPic  = Image(infilename)
+  val outPic = Image(inPic.w, inPic.h, inPic.d)
+  step(1)
+  for (i <- 0 until inPic.data.length) {
+    val rin = inPic.data(i)
+    val  in = if (rin < 0) 256 + rin else rin
+    poke(c.io.in, in)
+    step(1)
+    val out = peek(c.io.out)
+    outPic.data(i) = out.toByte
+  }
+  outPic.write(outfilename)
+  ok = true
+}

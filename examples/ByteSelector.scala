@@ -29,3 +29,14 @@ class ByteSelectorTests(c: ByteSelector) extends Tester(c) {
     expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
   }
 }
+
+// same as ByteSelectorTests but extends DaisyTester
+class ByteSelectorDaisyTests(c: ByteSelector) extends DaisyTester(c) {
+  val test_in = 12345678
+  for (t <- 0 until 4) {
+    poke(c.io.in,     test_in)
+    poke(c.io.offset, t)
+    step(1)
+    expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
+  }
+}

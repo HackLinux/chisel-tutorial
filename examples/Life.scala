@@ -60,3 +60,16 @@ class LifeTests(c: Life) extends Tester(c) {
     }
   }
 }
+
+// same as LifeTests but extends DaisyTester
+class LifeDaisyTests(c: Life) extends DaisyTester(c) {
+  for (t <- 0 until 16) {
+    step(1)
+    for (j <- 0 until c.n) {
+      for (i <- 0 until c.n) {
+        print(peek(c.io.state(c.idx(i, j))))
+      }
+      println()
+    }
+  }
+}

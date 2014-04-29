@@ -27,3 +27,17 @@ class HiLoMultiplierTests(c: HiLoMultiplier) extends Tester(c) {
     expect(c.io.Hi, ref_out(31, 16).litValue())
   }
 }
+
+// same as HiLoMultiplierTests but extends DaisyTester
+class HiLoMultiplierDaisyTests(c: HiLoMultiplier) extends DaisyTester(c) {
+  for (t <- 0 until 4) {
+    val rnd0 = rnd.nextInt(65535)
+    val rnd1 = rnd.nextInt(65535)
+    val ref_out = UInt(rnd0 * rnd1, width=32)
+    poke(c.io.A, rnd0)
+    poke(c.io.B, rnd1)
+    step(1)
+    expect(c.io.Lo, ref_out(15, 0).litValue())
+    expect(c.io.Hi, ref_out(31, 16).litValue())
+  }
+}

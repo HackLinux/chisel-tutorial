@@ -26,3 +26,14 @@ class ParityTests(c: Parity) extends Tester(c) {
   }
 }
 
+// same as ParityTests but extends DaisyTester
+class ParityDaisyTests(c: Parity) extends DaisyTester(c) {
+  var isOdd = 0
+  for (t <- 0 until 10) {
+    val bit = rnd.nextInt(2)
+    poke(c.io.in, bit)
+    step(1)
+    expect(c.io.out, isOdd)
+    isOdd = (isOdd + bit) % 2;
+  }
+}

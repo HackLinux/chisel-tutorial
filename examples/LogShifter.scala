@@ -36,3 +36,6 @@ class LogShifter extends Module {
 class LogShifterTests(c: LogShifter) extends Tester(c) {
 }
 
+// same as LogShifterTests but extends DaisyTester
+class LogShifterDaisyTests(c: LogShifter) extends DaisyTester(c) {
+}

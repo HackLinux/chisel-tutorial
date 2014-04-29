@@ -20,3 +20,13 @@ class TblTests(c: Tbl) extends Tester(c) {
   }
 }
 
+// same as TblTests but extends DaisyTester
+class TblDaisyTests(c: Tbl) extends DaisyTester(c) {
+  for (t <- 0 until 16) {
+    val addr = rnd.nextInt(256)
+    poke(c.io.addr, addr)
+    step(1)
+    expect(c.io.out, addr)
+  }
+}
+

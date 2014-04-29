@@ -30,3 +30,54 @@ class GCDTests(c: GCD) extends Tester(c) {
   } while (t <= 1 || peek(c.io.v) == 0)
   expect(c.io.z, z)
 }
+
+// same as GCDTests but extends DaisyTester
+class GCDDaisyTests(c: GCD) extends DaisyTester(c) {
+  val (a, b, z) = (64, 48, 16)
+  do {
+    val first = if (t == 0) 1 else 0;
+    poke(c.io.a, a)
+    poke(c.io.b, b)
+    poke(c.io.e, first)
+    step(1)
+  } while (t <= 1 || peek(c.io.v) == 0)
+  expect(c.io.z, z)
+}
+
+class GCDWrapper extends DaisyWrapper(new GCD) {
+  // write 0 -> { GCD.io.a, GCD.io.b }
+  val in_reg_0 = Reg(UInt())
+  when (wen(0)) {
+    in_reg_0 := io.in.bits
+  }
+  top.io.a := in_reg_0(31, 16)
+  top.io.b := in_reg_0(15, 0)
+  wready(0) := Bool(true)
+
+  // write 1 -> GCD.io.e
+  val in_reg_1 = Reg(UInt())
+  when (wen(1)) {
+    in_reg_1 := io.in.bits
+  }
+  top.io.e := in_reg_1(0)
+  wready(0) := Bool(true)
+
+  // read 0 -> GCD.io.z
+  rdata(0)  := top.io.z
+  rvalid(0) := top.io.v
+
+  // read 1 -> GCD.io.v
+  rdata(1)  := top.io.v
+  rvalid(1) := Bool(true)
+}
+
+class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c) {
+  val (a, b, z) = (64, 48, 16)
+  pokeAddr(0, a << 16 | b)
+  do {
+    val first = if (t == 0) 1 else 0;
+    pokeAddr(1, first)
+    step(1)
+  } while (t <= 1 || peekAddr(1) == 0)
+  expectAddr(0, z)
+}
