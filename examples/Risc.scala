@@ -123,7 +123,7 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {
   expect(c.io.out, 4)
 }
 
-class RiscWrapper extends DaisyWrapper(new Risc, false) {
+class RiscWrapper extends DaisyWrapper(new Risc) {
   // write(0) -> { Risc.io.boot, Risc.io.isWr, Risc.io.wrAddr }
   val in_reg_0 = Reg(UInt())
   when (wen(0)) {
