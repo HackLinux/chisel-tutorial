@@ -18,9 +18,9 @@ class GCD extends Module {
   io.z := x
   io.v := y === UInt(0)
   counter(Ones, io.a, io.b)
-  counter(Posedge, io.e)
-  counter(Negedge, io.z)
-  counter(Zeros, io.v)
+  counter(Zeros, io.e)
+  counter(Activity, io.z)
+  counter(Activity, io.v)
   counter(Default, x, y)
 }
 

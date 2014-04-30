@@ -8,7 +8,9 @@ class Combinational extends Module {
     val y   = UInt(INPUT,  16)
     val z   = UInt(OUTPUT, 16)
   }
-  io.z := io.x + io.y
+  val sum = io.x + io.y
+  io.z := sum
+  counter(sum)
 }
 
 class CombinationalTests(c: Combinational) extends Tester(c) {

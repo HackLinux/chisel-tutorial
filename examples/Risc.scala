@@ -88,7 +88,7 @@ class RiscTests(c: Risc) extends Tester(c) {
 }
 
 // same as RiscTests but extends DaisyTester
-class RiscDaisyTests(c: Risc) extends DaisyTester(c) {  
+class RiscDaisyTests(c: Risc) extends DaisyTester(c, true) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())

@@ -20,7 +20,7 @@ class FullAdder extends Module {
   val a_and_cin = io.a & io.cin
   io.cout := a_and_b | b_and_cin | a_and_cin
   counter(Activity, a_xor_b, a_and_b, b_and_cin, a_and_cin)
-  counter(Zeros, io.sum)
+  counter(Ones, io.sum)
 }
 
 class FullAdderTests(c: FullAdder) extends Tester(c) {  

@@ -24,6 +24,7 @@ class MemorySearch extends Module {
   counter(Zeros, index)
   counter(Posedge, done)
   counter(Negedge, io.en)
+  counter(io.address)
 }
 
 class MemorySearchTests(c: MemorySearch) extends Tester(c) {
