@@ -5,10 +5,10 @@ import scala.collection.mutable.ArrayBuffer
 
 object TutorialExamples {
   def main(args: Array[String]): Unit = {
-    val tutArgs = args.slice(1, args.length)
     val res =
-    if (args(1) == "DaisyChain") {
-	args(0) match {
+    if (args(0) == "DaisyChain") {
+        val tutArgs = args.slice(2, args.length)
+	args(1) match {
 	  case "GCD" =>
 	    chiselMainTest(tutArgs, () => Module(new GCD())){
 	      c => new GCDDaisyTests(c)}
@@ -101,6 +101,7 @@ object TutorialExamples {
 	      c => new MultiClockDomainWrapperTests(c)}
 	}
     } else {
+        val tutArgs = args.slice(1, args.length)
 	args(0) match {
 	  case "GCD" =>
 	    chiselMainTest(tutArgs, () => Module(new GCD())){

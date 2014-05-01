@@ -69,11 +69,11 @@ class GCDWrapper extends DaisyWrapper(new GCD) {
 
   // read 0 -> GCD.io.z
   rdata(0)  := top.io.z
-  rvalid(0) := top.io.v
+  // rvalid(0) := Bool(true)
 
   // read 1 -> GCD.io.v
   rdata(1)  := top.io.v
-  rvalid(1) := Bool(true)
+  // rvalid(1) := Bool(true)
 }
 
 class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c) {

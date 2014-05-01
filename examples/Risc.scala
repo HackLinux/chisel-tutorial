@@ -88,7 +88,7 @@ class RiscTests(c: Risc) extends Tester(c) {
 }
 
 // same as RiscTests but extends DaisyTester
-class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {  
+class RiscDaisyTests(c: Risc) extends DaisyTester(c, true) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())
@@ -144,11 +144,11 @@ class RiscWrapper extends DaisyWrapper(new Risc) {
 
   // read(0) -> Risc.io.valid
   rdata(0) := top.io.valid
-  rvalid(0) := Bool(true)
+  // rvalid(0) := Bool(true)
 
   // read(1) -> Risc.io.out
   rdata(1) := top.io.out
-  rvalid(1) := Bool(true)
+  // rvalid(1) := Bool(true)
 }
 
 class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {

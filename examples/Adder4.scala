@@ -89,7 +89,7 @@ class Adder4Wrapper extends DaisyWrapper(new Adder4) {
 
   // read 0 -> { Adder4.io.Cout, Adder4.io.Sum }
   rdata(0) := Cat(top.io.Cout, top.io.Sum)
-  rvalid(0) := Bool(true)
+  // rvalid(0) := Bool(true)
 }
 
 class Adder4WrapperTests(c: Adder4Wrapper) extends DaisyWrapperTester(c) {

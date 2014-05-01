@@ -16,7 +16,7 @@ class ClockedAccumulator(c: Clock) extends Module(clock = c) {
   io.inc.ready := io.sum.ready
   io.sum.valid := io.inc.valid
   io.sum.bits  := accumulator
-  counter(Activity, accumulator, io.inc.bits)
+  counter(Activity, accumulator)
 }
 
 class MultiClockDomain extends Module {
