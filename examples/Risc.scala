@@ -125,30 +125,18 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, true) {
 
 class RiscWrapper extends DaisyWrapper(new Risc) {
   // write(0) -> { Risc.io.boot, Risc.io.isWr, Risc.io.wrAddr }
-  val in_reg_0 = Reg(UInt())
-  when (wen(0)) {
-    in_reg_0 := io.in.bits
-  }
-  top.io.boot   := in_reg_0(9)
-  top.io.isWr   := in_reg_0(8)
-  top.io.wrAddr := in_reg_0(7, 0)
-  wready(0) := Bool(true)
+  top.io.boot   := wdata(0)(9)
+  top.io.isWr   := wdata(0)(8)
+  top.io.wrAddr := wdata(0)(7, 0)
   
   // write(1) -> Risc.io.wrData
-  val in_reg_1 = Reg(UInt())
-  when (wen(1)) {
-    in_reg_1 := io.in.bits
-  }
-  top.io.wrData := in_reg_1
-  wready(1) := Bool(true)
+  top.io.wrData := wdata(1)
 
   // read(0) -> Risc.io.valid
   rdata(0) := top.io.valid
-  // rvalid(0) := Bool(true)
 
   // read(1) -> Risc.io.out
   rdata(1) := top.io.out
-  // rvalid(1) := Bool(true)
 }
 
 class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {

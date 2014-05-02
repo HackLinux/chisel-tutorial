@@ -101,20 +101,14 @@ class MultiClockDomainDaisyTests(c: MultiClockDomain) extends DaisyTester(c) {
 
 class MultiClockDomainWrapper extends DaisyWrapper(new MultiClockDomain) {
   // write(0) -> { MultiClockDomain.io.sum.ready, MultiClockDomain.io.start }
-  val in_reg = Reg(UInt())
-  when (wen(0)) {
-    in_reg := io.in.bits
-  }
-  top.io.start     := in_reg(0)
-  top.io.sum.ready := in_reg(1)
+  top.io.start     := wdata(0)(0)
+  top.io.sum.ready := wdata(0)(1)
 
   // read(0) -> MultiClockDomain.io.sum.bits
   rdata(0) := top.io.sum.bits
-  rvalid(0) := Bool(true)
 
   // rdata(1) -> MultiClockDomain.io.sum.valid
   rdata(1) := top.io.sum.valid
-  rvalid(1) := Bool(true)
 }
 
 class MultiClockDomainWrapperTests(c: MultiClockDomainWrapper) extends DaisyWrapperTester(c) {

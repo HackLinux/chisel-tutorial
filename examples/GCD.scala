@@ -51,29 +51,17 @@ class GCDDaisyTests(c: GCD) extends DaisyTester(c) {
 
 class GCDWrapper extends DaisyWrapper(new GCD) {
   // write 0 -> { GCD.io.a, GCD.io.b }
-  val in_reg_0 = Reg(UInt())
-  when (wen(0)) {
-    in_reg_0 := io.in.bits
-  }
-  top.io.a := in_reg_0(31, 16)
-  top.io.b := in_reg_0(15, 0)
-  wready(0) := Bool(true)
+  top.io.a := wdata(0)(31, 16)
+  top.io.b := wdata(0)(15, 0)
 
   // write 1 -> GCD.io.e
-  val in_reg_1 = Reg(UInt())
-  when (wen(1)) {
-    in_reg_1 := io.in.bits
-  }
-  top.io.e := in_reg_1(0)
-  wready(0) := Bool(true)
+  top.io.e := wdata(1)(0)
 
   // read 0 -> GCD.io.z
   rdata(0)  := top.io.z
-  // rvalid(0) := Bool(true)
 
   // read 1 -> GCD.io.v
   rdata(1)  := top.io.v
-  // rvalid(1) := Bool(true)
 }
 
 class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c) {

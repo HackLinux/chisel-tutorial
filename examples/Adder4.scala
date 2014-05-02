@@ -78,18 +78,12 @@ class Adder4DaisyTests(c: Adder4) extends DaisyTester(c) {
 
 class Adder4Wrapper extends DaisyWrapper(new Adder4) {
   // write 0 -> { Adder.io.Cin, Adder4.io.A, Adder4.io.B }
-  val in_reg_0 = Reg(UInt())
-  when (wen(0)) {
-    in_reg_0 := io.in.bits
-  }
-  top.io.A   := in_reg_0(7, 4)
-  top.io.B   := in_reg_0(3, 0)
-  top.io.Cin := in_reg_0(8)
-  wready(0)  := Bool(true)
+  top.io.A   := wdata(0)(7, 4)
+  top.io.B   := wdata(0)(3, 0)
+  top.io.Cin := wdata(0)(8)
 
   // read 0 -> { Adder4.io.Cout, Adder4.io.Sum }
   rdata(0) := Cat(top.io.Cout, top.io.Sum)
-  // rvalid(0) := Bool(true)
 }
 
 class Adder4WrapperTests(c: Adder4Wrapper) extends DaisyWrapperTester(c) {
