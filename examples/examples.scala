@@ -85,7 +85,7 @@ object TutorialExamples {
 	    chiselMainTest(tutArgs, () => Module(new MultiClockDomain())){
 	      c => new MultiClockDomainDaisyTests(c)}
 	  case "Stack" =>
-	    chiselMainTest(tutArgs, () => Module(new Stack(8))){
+	    chiselMainTest(tutArgs, () => Module(new Stack(32))){
 	      c => new StackDaisyTests(c)}
 	  case "GCDWrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new GCDWrapper)){
@@ -99,6 +99,9 @@ object TutorialExamples {
 	  case "MultiClockDomainWrapper" =>
 	    chiselMainTest(tutArgs, () => Module(new MultiClockDomainWrapper)){
 	      c => new MultiClockDomainWrapperTests(c)}
+	  case "StackWrapper" =>
+	    chiselMainTest(tutArgs, () => Module(new StackWrapper(32))){
+	      c => new StackWrapperTests(c)}
 	}
     } else {
         val tutArgs = args.slice(1, args.length)
@@ -181,7 +184,7 @@ object TutorialExamples {
 	    chiselMainTest(tutArgs, () => Module(new MultiClockDomain())){
 	      c => new MultiClockDomainTests(c)}
 	  case "Stack" =>
-	    chiselMainTest(tutArgs, () => Module(new Stack(8))){
+	    chiselMainTest(tutArgs, () => Module(new Stack(32))){
 	      c => new StackTests(c)}
 	}
       }
