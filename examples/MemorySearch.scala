@@ -27,7 +27,7 @@ class MemorySearch extends Module {
   counter(io.address)
 }
 
-class MemorySearchTests(c: MemorySearch) extends Tester(c) {
+class MemorySearchTests(c: MemorySearch) extends Tester(c, isLoggingPokes = true) {
   val list = c.elts.map(int(_)) 
   val n = 8
   val maxT = n * (list.length + 3)
@@ -61,6 +61,27 @@ class MemorySearchDaisyTests(c: MemorySearch) extends DaisyTester(c) {
       step(1)
     } while (peek(c.io.done) == 0 && t < maxT)
     val addr = peek(c.io.address).toInt
+    expect(addr == list.length || list(addr) == target, 
+           "LOOKING FOR " + target + " FOUND " + addr)
+  }
+}
+
+class MemorySearchWrapper extends DaisyWrapper(new MemorySearch)
+
+class MemorySearchWrapperTests(c: MemorySearchWrapper) extends DaisyWrapperTester(c) {
+  val list = c.top.elts.map(int(_)) 
+  val n = 8
+  val maxT = n * (list.length + 3)
+  for (k <- 0 until n) {
+    val target = rnd.nextInt(16)
+    poke(c.top.io.en,     1)
+    poke(c.top.io.target, target)
+    step(1)
+    poke(c.top.io.en,     0)
+    do {
+      step(1)
+    } while (peek(c.top.io.done) == 0 && t < maxT)
+    val addr = peek(c.top.io.address).toInt
     expect(addr == list.length || list(addr) == target, 
            "LOOKING FOR " + target + " FOUND " + addr)
   }

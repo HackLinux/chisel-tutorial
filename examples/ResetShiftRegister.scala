@@ -23,7 +23,7 @@ class ResetShiftRegister extends Module {
   counter(r0, r1, r2, r3)
 }
 
-class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c) {  
+class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c, isLoggingPokes = true) {  
   val ins = Array.fill(5){ 0 }
   var k   = 0
   for (n <- 0 until 16) {
@@ -53,6 +53,25 @@ class ResetShiftRegisterDaisyTests(c: ResetShiftRegister) extends DaisyTester(c)
     poke(c.io.shift, shift)
     step(1)
     expect(c.io.out, (if (n < 4) 0 else ins((k + 1) % 5)))
+    if (shift == 1)
+      k = k + 1
+  }
+}
+
+class ResetShiftRegisterWrapper extends DaisyWrapper(new ResetShiftRegister)
+
+class ResetShiftRegisterWrapperTests(c: ResetShiftRegisterWrapper) extends DaisyWrapperTester(c) {
+  val ins = Array.fill(5){ 0 }
+  var k   = 0
+  for (n <- 0 until 16) {
+    val in    = rnd.nextInt(2)
+    val shift = rnd.nextInt(2)
+    if (shift == 1) 
+      ins(k % 5) = in
+    poke(c.top.io.in,    in)
+    poke(c.top.io.shift, shift)
+    step(1)
+    expect(c.top.io.out, (if (n < 4) 0 else ins((k + 1) % 5)))
     if (shift == 1)
       k = k + 1
   }

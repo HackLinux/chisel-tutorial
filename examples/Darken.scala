@@ -11,7 +11,7 @@ class Darken extends Module {
   io.out := io.in << UInt(1)
 }
 
-class DarkenTests(c: Darken, val infilename: String, val outfilename: String) extends Tester(c, false) {  
+class DarkenTests(c: Darken, val infilename: String, val outfilename: String) extends Tester(c, false, isLoggingPokes = true) {  
   val inPic  = Image(infilename)
   val outPic = Image(inPic.w, inPic.h, inPic.d)
   step(1)
@@ -38,6 +38,25 @@ class DarkenDaisyTests(c: Darken, val infilename: String, val outfilename: Strin
     poke(c.io.in, in)
     step(1)
     val out = peek(c.io.out)
+    outPic.data(i) = out.toByte
+  }
+  outPic.write(outfilename)
+  ok = true
+}
+
+class DarkenWrapper extends DaisyWrapper(new Darken)
+
+// same as DarkenTests but extends DaisyTester
+class DarkenWrapperTests(c: DarkenWrapper, val infilename: String, val outfilename: String) extends DaisyTester(c, false) {  
+  val inPic  = Image(infilename)
+  val outPic = Image(inPic.w, inPic.h, inPic.d)
+  step(1)
+  for (i <- 0 until inPic.data.length) {
+    val rin = inPic.data(i)
+    val  in = if (rin < 0) 256 + rin else rin
+    poke(c.top.io.in, in)
+    step(1)
+    val out = peek(c.top.io.out)
     outPic.data(i) = out.toByte
   }
   outPic.write(outfilename)

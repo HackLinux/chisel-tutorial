@@ -21,9 +21,13 @@ class FullAdder2 extends Module {
   io.cout := a_and_b | b_and_cin | a_and_cin
 }
 
-class FullAdder2Tests(c: FullAdder2) extends Tester(c) {  
+class FullAdder2Tests(c: FullAdder2) extends Tester(c, isLoggingPokes = true) {  
 }
 
 // same as FullAdder2Tests but extends DaisyTester
 class FullAdder2DaisyTests(c: FullAdder2) extends DaisyTester(c) {  
 }
+
+class FullAdder2Wrapper extends DaisyWrapper(new FullAdder2)
+
+class FullAdder2WrapperTests(c: FullAdder2Wrapper) extends DaisyWrapperTester(c)

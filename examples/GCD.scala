@@ -24,7 +24,7 @@ class GCD extends Module {
   counter(Default, x, y)
 }
 
-class GCDTests(c: GCD) extends Tester(c) {
+class GCDTests(c: GCD) extends Tester(c, isLoggingPokes = true) {
   val (a, b, z) = (64, 48, 16)
   do {
     val first = if (t == 0) 1 else 0;
@@ -49,28 +49,16 @@ class GCDDaisyTests(c: GCD) extends DaisyTester(c) {
   expect(c.io.z, z)
 }
 
-class GCDWrapper extends DaisyWrapper(new GCD) {
-  // write 0 -> { GCD.io.a, GCD.io.b }
-  top.io.a := wdata(0)(31, 16)
-  top.io.b := wdata(0)(15, 0)
-
-  // write 1 -> GCD.io.e
-  top.io.e := wdata(1)(0)
-
-  // read 0 -> GCD.io.z
-  rdata(0)  := top.io.z
-
-  // read 1 -> GCD.io.v
-  rdata(1)  := top.io.v
-}
+class GCDWrapper extends DaisyWrapper(new GCD)
 
 class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c) {
   val (a, b, z) = (64, 48, 16)
-  pokeAddr(0, a << 16 | b)
   do {
     val first = if (t == 0) 1 else 0;
-    pokeAddr(1, first)
+    poke(c.top.io.a, a)
+    poke(c.top.io.b, b)
+    poke(c.top.io.e, first)
     step(1)
-  } while (t <= 1 || peekAddr(1) == 0)
-  expectAddr(0, z)
+  } while (t <= 1 || peek(c.top.io.v) == 0)
+  expect(c.top.io.z, z)
 }

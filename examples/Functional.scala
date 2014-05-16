@@ -15,7 +15,7 @@ class Functional extends Module {
   counter(io.z)
 }
 
-class FunctionalTests(c: Functional) extends Tester(c) {
+class FunctionalTests(c: Functional) extends Tester(c, isLoggingPokes = true) {
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
@@ -37,5 +37,19 @@ class FunctionalDaisyTests(c: Functional) extends DaisyTester(c) {
     poke(c.io.y, y)
     step(1)
     expect(c.io.z, (x & y) | (~x & y))
+  }
+}
+
+class FunctionalWrapper extends DaisyWrapper(new Functional)
+
+class FunctionalWrapperTests(c: FunctionalWrapper) extends DaisyWrapperTester(c) {
+  val maxInt = 1 << 16
+  for (i <- 0 until 10) {
+    val x = rnd.nextInt(maxInt)
+    val y = rnd.nextInt(maxInt)
+    poke(c.top.io.x, x)
+    poke(c.top.io.y, y)
+    step(1)
+    expect(c.top.io.z, (x & y) | (~x & y))
   }
 }

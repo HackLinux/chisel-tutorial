@@ -11,8 +11,8 @@ class Risc extends Module {
     val valid  = Bool(OUTPUT)
     val out    = Bits(OUTPUT, 32)
   }
-  val file = Mem(Bits(width = 32), 256)
-  val code = Mem(Bits(width = 32), 256)
+  val file = Mem(Bits(width = 32), 16/*256*/)
+  val code = Mem(Bits(width = 32), 16/*256*/)
   val pc   = Reg(init=UInt(0, 8))
   
   val add_op :: imm_op :: Nil = Enum(Bits(), 2)
@@ -52,7 +52,7 @@ class Risc extends Module {
   counter(Ones, pc)
 }
 
-class RiscTests(c: Risc) extends Tester(c) {  
+class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())
@@ -123,34 +123,23 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {
   expect(c.io.out, 4)
 }
 
-class RiscWrapper extends DaisyWrapper(new Risc) {
-  // write(0) -> { Risc.io.boot, Risc.io.isWr, Risc.io.wrAddr }
-  top.io.boot   := wdata(0)(9)
-  top.io.isWr   := wdata(0)(8)
-  top.io.wrAddr := wdata(0)(7, 0)
-  
-  // write(1) -> Risc.io.wrData
-  top.io.wrData := wdata(1)
-
-  // read(0) -> Risc.io.valid
-  rdata(0) := top.io.valid
-
-  // read(1) -> Risc.io.out
-  rdata(1) := top.io.out
-}
+class RiscWrapper extends DaisyWrapper(new Risc)
 
 class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
   def wr(addr: UInt, data: UInt)  = {
-    pokeAddr(0, 0 << 9 | 1 << 8 | addr.litValue())
-    pokeAddr(1, data.litValue())
+    poke(c.top.io.isWr,   1)
+    poke(c.top.io.wrAddr, addr.litValue())
+    poke(c.top.io.wrData, data.litValue())
     step(1)
   }
   def boot()  = {
-    pokeAddr(0, 1 << 9 | 0 << 8 | 0)
+    poke(c.top.io.isWr, 0)
+    poke(c.top.io.boot, 1)
     step(1)
   }
   def tick()  = {
-    pokeAddr(0, 0 << 9 | 0 << 8 | 0)
+    poke(c.top.io.isWr, 0)
+    poke(c.top.io.boot, 0)
     step(1)
   }
   def I (op: UInt, rc: Int, ra: Int, rb: Int) = 
@@ -166,7 +155,7 @@ class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
   var k = 0
   do {
     tick(); k += 1
-  } while (peekAddr(0) == 0 && k < 10)
+  } while (peek(c.top.io.valid) == 0 && k < 10)
   expect(k < 10, "TIME LIMIT")
-  expectAddr(1, 4)
+  expect(c.top.io.out, 4)
 }

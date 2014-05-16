@@ -44,7 +44,7 @@ class Router extends Module {
   counter(Negedge, io.writes.valid, io.in.valid)
 }
 
-class RouterTests(c: Router) extends Tester(c) {  
+class RouterTests(c: Router) extends Tester(c, isLoggingPokes = true) {  
   def rd(addr: Int, data: Int) = {
     poke(c.io.in.valid,        0)
     poke(c.io.writes.valid,    0)
@@ -122,6 +122,53 @@ class RouterDaisyTests(c: Router) extends DaisyTester(c) {
     poke(c.io.in.valid,       1)
     poke(c.io.in.bits.header, header)
     poke(c.io.in.bits.body,   body)
+    var i = 0
+    do {
+      step(1)
+      i += 1
+    } while (!isAnyValidOuts() || i > 10)
+    expect(i < 10, "FIND VALID OUT")
+  }
+  rd(0, 0)
+  wr(0, 1)
+  rd(0, 1)
+  rt(0, 1)
+}
+
+class RouterWrapper extends DaisyWrapper(new Router)
+
+class RouterWrapperTests(c: RouterWrapper) extends DaisyWrapperTester(c) {
+  def rd(addr: Int, data: Int) = {
+    poke(c.top.io.in.valid,        0)
+    poke(c.top.io.writes.valid,    0)
+    poke(c.top.io.reads.valid,     1)
+    poke(c.top.io.replies.ready,   1)
+    poke(c.top.io.reads.bits.addr, addr)
+    step(1)
+    expect(c.top.io.replies.bits, data)
+  }
+  def wr(addr: Int, data: Int)  = {
+    poke(c.top.io.in.valid,         0)
+    poke(c.top.io.reads.valid,      0)
+    poke(c.top.io.writes.valid,     1)
+    poke(c.top.io.writes.bits.addr, addr)
+    poke(c.top.io.writes.bits.data, data)
+    step(1)
+  }
+  def isAnyValidOuts(): Boolean = {
+    for (out <- c.top.io.outs)
+      if (peek(out.valid) == 1)
+        return true
+    false
+  }
+  def rt(header: Int, body: Int)  = {
+    for (out <- c.top.io.outs)
+      poke(out.ready, 1)
+    poke(c.top.io.reads.valid,    0)
+    poke(c.top.io.writes.valid,   0)
+    poke(c.top.io.in.valid,       1)
+    poke(c.top.io.in.bits.header, header)
+    poke(c.top.io.in.bits.body,   body)
     var i = 0
     do {
       step(1)

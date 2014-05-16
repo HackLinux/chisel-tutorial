@@ -36,11 +36,11 @@ class Stack(val depth: Int) extends Module {
   counter(Posedge, io.en)
 }
 
-class StackTests(c: Stack) extends Tester(c) {  
+class StackTests(c: Stack) extends Tester(c, isLoggingPokes = true) {  
   var nxtDataOut = 0
   val stack = new ScalaStack[Int]()
 
-  for (t <- 0 until 16) {
+  for (t <- 0 until 200) {
     val enable  = rnd.nextInt(2)
     val push    = rnd.nextInt(2)
     val pop     = rnd.nextInt(2)
@@ -97,16 +97,7 @@ class StackDaisyTests(c: Stack) extends DaisyTester(c) {
   }
 }
 
-class StackWrapper(n: Int)  extends DaisyWrapper(new Stack(n)) {
-  // read 0 -> Stack.io.dataOut
-  rdata(0) := top.io.dataOut
-  // write 0 -> Stack.io.dataIn
-  top.io.dataIn := wdata(0)
-  // write 1 -> { Stack.io.pop, Stack.io.push, Stack.io.en }
-  top.io.pop := wdata(1)(2)
-  top.io.push := wdata(1)(1)
-  top.io.en := wdata(1)(0)
-}
+class StackWrapper(n: Int) extends DaisyWrapper(new Stack(n))
 
 // same as StackTests but extends DaisyTester
 class StackWrapperTests(c: StackWrapper) extends DaisyWrapperTester(c, false) {  
@@ -129,10 +120,13 @@ class StackWrapperTests(c: StackWrapper) extends DaisyWrapperTester(c, false) {
         stack.pop()
       }
     }
-    pokeAddr(1, pop << 2 | push << 1 | enable)
-    pokeAddr(0, dataIn)
+
+    poke(c.top.io.pop,    pop)
+    poke(c.top.io.push,   push)
+    poke(c.top.io.en,     enable)
+    poke(c.top.io.dataIn, dataIn)
     step(1)
-    expectAddr(0, dataOut)
+    expect(c.top.io.dataOut, dataOut)
   }
 }
 

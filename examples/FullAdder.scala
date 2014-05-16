@@ -23,7 +23,7 @@ class FullAdder extends Module {
   counter(Ones, io.sum)
 }
 
-class FullAdderTests(c: FullAdder) extends Tester(c) {  
+class FullAdderTests(c: FullAdder) extends Tester(c, isLoggingPokes = true) {  
   for (t <- 0 until 4) {
     val a    = rnd.nextInt(2)
     val b    = rnd.nextInt(2)
@@ -57,3 +57,22 @@ class FullAdderDaisyTests(c: FullAdder) extends DaisyTester(c) {
     expect(c.io.cout, cout)
   }
 }
+
+class FullAdderWrapper extends DaisyWrapper(new FullAdder)
+
+class FullAdderWrapperTests(c: FullAdderWrapper) extends DaisyWrapperTester(c) {
+  for (t <- 0 until 4) {
+    val a    = rnd.nextInt(2)
+    val b    = rnd.nextInt(2)
+    val cin  = rnd.nextInt(2)
+    val res  = a + b + cin
+    val sum  = res & 1
+    val cout = (res >> 1) & 1
+    poke(c.top.io.a, a)
+    poke(c.top.io.b, b)
+    poke(c.top.io.cin, cin)
+    step(1)
+    expect(c.top.io.sum, sum)
+    expect(c.top.io.cout, cout)
+  }
+} 

@@ -31,3 +31,13 @@ class TblDaisyTests(c: Tbl) extends DaisyTester(c) {
   }
 }
 
+class TblWrapper extends DaisyWrapper(new Tbl)
+
+class TblWrapperTests(c: TblWrapper) extends DaisyWrapperTester(c){
+  for (t <- 0 until 16) {
+    val addr = rnd.nextInt(256)
+    poke(c.top.io.addr, addr)
+    step(1)
+    expect(c.top.io.out, addr)
+  }
+}

@@ -28,7 +28,7 @@ class ByteSelector extends Module {
   counter(Zeros, a, b, c, d)
 }
 
-class ByteSelectorTests(c: ByteSelector) extends Tester(c) {
+class ByteSelectorTests(c: ByteSelector) extends Tester(c, isLoggingPokes = true) {
   val test_in = 12345678
   for (t <- 0 until 4) {
     poke(c.io.in,     test_in)
@@ -46,5 +46,17 @@ class ByteSelectorDaisyTests(c: ByteSelector) extends DaisyTester(c) {
     poke(c.io.offset, t)
     step(1)
     expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
+  }
+}
+
+class ByteSelectorWrapper extends DaisyWrapper(new ByteSelector)
+
+class ByteSelectorWrapperTester(c: ByteSelectorWrapper) extends DaisyWrapperTester(c) {
+  val test_in = 12345678
+  for (t <- 0 until 4) {
+    poke(c.top.io.in,     test_in)
+    poke(c.top.io.offset, t)
+    step(1)
+    expect(c.top.io.out, (test_in >> (t * 8)) & 0xFF)
   }
 }

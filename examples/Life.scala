@@ -51,7 +51,7 @@ class Life(val n: Int) extends Module {
   }
 }
 
-class LifeTests(c: Life) extends Tester(c) {
+class LifeTests(c: Life) extends Tester(c, isLoggingPokes = true) {
   for (t <- 0 until 16) {
     step(1)
     for (j <- 0 until c.n) {
@@ -70,6 +70,20 @@ class LifeDaisyTests(c: Life) extends DaisyTester(c) {
     for (j <- 0 until c.n) {
       for (i <- 0 until c.n) {
         print(peek(c.io.state(c.idx(i, j))))
+      }
+      println()
+    }
+  }
+}
+
+class LifeWrapper(n: Int)  extends DaisyWrapper(new Life(n))
+
+class LifeWrapperTests(c: LifeWrapper) extends DaisyWrapperTester(c) {
+  for (t <- 0 until 16) {
+    step(1)
+    for (j <- 0 until c.top.n) {
+      for (i <- 0 until c.top.n) {
+        print(peek(c.top.io.state(c.top.idx(i, j))))
       }
       println()
     }

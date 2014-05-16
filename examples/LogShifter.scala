@@ -35,9 +35,13 @@ class LogShifter extends Module {
   counter(Negedge, io.shamt)
 }
 
-class LogShifterTests(c: LogShifter) extends Tester(c) {
+class LogShifterTests(c: LogShifter) extends Tester(c, isLoggingPokes = true) {
 }
 
 // same as LogShifterTests but extends DaisyTester
 class LogShifterDaisyTests(c: LogShifter) extends DaisyTester(c) {
 }
+
+class LogShifterWrapper extends DaisyWrapper(new LogShifter)
+
+class LogShifterWrapperTests(c: LogShifterWrapper) extends DaisyWrapperTester(c)

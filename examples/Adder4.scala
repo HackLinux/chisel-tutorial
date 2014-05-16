@@ -42,7 +42,7 @@ class Adder4 extends Module {
   counter(s0, s1, s2, io.Sum)
 }
 
-class Adder4Tests(c: Adder4) extends Tester(c) {  
+class Adder4Tests(c: Adder4) extends Tester(c, isLoggingPokes = true) {  
   val rnd2 = rnd.nextInt(2)
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(16)
@@ -76,15 +76,7 @@ class Adder4DaisyTests(c: Adder4) extends DaisyTester(c) {
 }
 
 
-class Adder4Wrapper extends DaisyWrapper(new Adder4) {
-  // write 0 -> { Adder.io.Cin, Adder4.io.A, Adder4.io.B }
-  top.io.A   := wdata(0)(7, 4)
-  top.io.B   := wdata(0)(3, 0)
-  top.io.Cin := wdata(0)(8)
-
-  // read 0 -> { Adder4.io.Cout, Adder4.io.Sum }
-  rdata(0) := Cat(top.io.Cout, top.io.Sum)
-}
+class Adder4Wrapper extends DaisyWrapper(new Adder4) 
 
 class Adder4WrapperTests(c: Adder4Wrapper) extends DaisyWrapperTester(c) {
   val rnd2 = rnd.nextInt(2)
@@ -92,10 +84,13 @@ class Adder4WrapperTests(c: Adder4Wrapper) extends DaisyWrapperTester(c) {
     val rnd0 = rnd.nextInt(16)
     val rnd1 = rnd.nextInt(16)
     val rnd2 = rnd.nextInt(2)
-    pokeAddr(0, rnd2 << 8 | rnd0 << 4 | rnd1)
+    poke(c.top.io.A,   rnd0)
+    poke(c.top.io.B,   rnd1)
+    poke(c.top.io.Cin, rnd2)
     step(1)
     val rsum = UInt(rnd0 & 0xF) + UInt(rnd1 & 0xF) + UInt(rnd2 & 0x1)
-    expectAddr(0, rsum.litValue())
+    expect(c.top.io.Sum, rsum(3, 0).litValue())
+    expect(c.top.io.Cout, rsum(4).litValue())
   }
 }
 

@@ -36,7 +36,7 @@ class Adder(val n:Int) extends Module {
     counter(Negedge, sum(i))
 }
 
-class AdderTests(c: Adder) extends Tester(c) {
+class AdderTests(c: Adder) extends Tester(c, isLoggingPokes = true) {
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(c.n)
     val rnd1 = rnd.nextInt(c.n)
@@ -66,5 +66,23 @@ class AdderDaisyTests(c: Adder) extends DaisyTester(c) {
     val rsum = UInt(rnd0 + rnd1 + rnd2, width=c.n + 1)
     expect(c.io.Sum, rsum(c.n - 1, 0).litValue())
     expect(c.io.Cout, rsum(c.n).litValue())
+  }
+}
+
+class AdderWrapper(n: Int) extends DaisyWrapper(new Adder(n)) 
+
+class AdderWrapperTests(c: AdderWrapper) extends DaisyWrapperTester(c) {
+  for (t <- 0 until 4) {
+    val rnd0 = rnd.nextInt(c.top.n)
+    val rnd1 = rnd.nextInt(c.top.n)
+    val rnd2 = rnd.nextInt(1)
+
+    poke(c.top.io.A, rnd0)
+    poke(c.top.io.B, rnd1)
+    poke(c.top.io.Cin, rnd2)
+    step(1)
+    val rsum = UInt(rnd0 + rnd1 + rnd2, width=c.n + 1)
+    expect(c.top.io.Sum, rsum(c.top.n - 1, 0).litValue())
+    expect(c.top.io.Cout, rsum(c.top.n).litValue())
   }
 }

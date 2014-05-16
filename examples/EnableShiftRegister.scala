@@ -28,7 +28,7 @@ class EnableShiftRegister extends Module {
   counter(Activity, io.shift)
 }
 
-class EnableShiftRegisterTests(c: EnableShiftRegister) extends Tester(c) {  
+class EnableShiftRegisterTests(c: EnableShiftRegister) extends Tester(c, isLoggingPokes = true) {  
   val reg = Array.fill(4){ 0 }
   for (t <- 0 until 16) {
     val in    = rnd.nextInt(2)
@@ -55,6 +55,25 @@ class EnableShiftRegisterDaisyTests(c: EnableShiftRegister) extends DaisyTester(
     poke(c.io.shift, shift)
     step(1)
     expect(c.io.out, reg(3))
+    if (shift == 1) {
+      for (i <- 3 to 1 by -1)
+        reg(i) = reg(i-1)
+      reg(0) = in
+    }
+  }
+}
+
+class EnableShiftRegisterWrapper extends DaisyWrapper(new EnableShiftRegister)
+
+class EnableShiftRegisterWrapperTests(c: EnableShiftRegisterWrapper) extends DaisyWrapperTester(c) {
+  val reg = Array.fill(4){ 0 }
+  for (t <- 0 until 16) {
+    val in    = rnd.nextInt(2)
+    val shift = rnd.nextInt(2)
+    poke(c.top.io.in,    in)
+    poke(c.top.io.shift, shift)
+    step(1)
+    expect(c.top.io.out, reg(3))
     if (shift == 1) {
       for (i <- 3 to 1 by -1)
         reg(i) = reg(i-1)

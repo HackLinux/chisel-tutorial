@@ -17,7 +17,7 @@ class VecSearch extends Module {
   counter(io.out)
 }
 
-class VecSearchTests(c: VecSearch) extends Tester(c) {
+class VecSearchTests(c: VecSearch) extends Tester(c, isLoggingPokes = true) {
   val list = c.elts.map(int(_)) 
   for (elt <- list) {
     step(1)
@@ -31,5 +31,15 @@ class VecSearchDaisyTests(c: VecSearch) extends DaisyTester(c) {
   for (elt <- list) {
     step(1)
     expect(c.io.out, elt)
+  }
+}
+
+class VecSearchWrapper extends DaisyWrapper(new VecSearch)
+
+class VecSearchWrapperTests(c: VecSearchWrapper) extends DaisyWrapperTester(c){
+  val list = c.top.elts.map(int(_)) 
+  for (elt <- list) {
+    step(1)
+    expect(c.top.io.out, elt)
   }
 }
