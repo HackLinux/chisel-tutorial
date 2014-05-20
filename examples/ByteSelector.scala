@@ -51,7 +51,7 @@ class ByteSelectorDaisyTests(c: ByteSelector) extends DaisyTester(c) {
 
 class ByteSelectorWrapper extends DaisyWrapper(new ByteSelector)
 
-class ByteSelectorWrapperTester(c: ByteSelectorWrapper) extends DaisyWrapperTester(c) {
+class ByteSelectorWrapperTests(c: ByteSelectorWrapper) extends DaisyWrapperTester(c) {
   val test_in = 12345678
   for (t <- 0 until 4) {
     poke(c.top.io.in,     test_in)

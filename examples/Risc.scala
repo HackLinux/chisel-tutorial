@@ -64,7 +64,7 @@ class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {
     poke(c.io.boot, 1)
     step(1)
   }
-  def tick()  = {
+  def tick_()  = {
     poke(c.io.isWr, 0)
     poke(c.io.boot, 0)
     step(1)
@@ -81,7 +81,7 @@ class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {
   boot()
   var k = 0
   do {
-    tick(); k += 1
+    tick_(); k += 1
   } while (peek(c.io.valid) == 0 && k < 10)
   expect(k < 10, "TIME LIMIT")
   expect(c.io.out, 4)
@@ -100,7 +100,7 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {
     poke(c.io.boot, 1)
     step(1)
   }
-  def tick()  = {
+  def tick_()  = {
     poke(c.io.isWr, 0)
     poke(c.io.boot, 0)
     step(1)
@@ -117,7 +117,7 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {
   boot()
   var k = 0
   do {
-    tick(); k += 1
+    tick_(); k += 1
   } while (peek(c.io.valid) == 0 && k < 10)
   expect(k < 10, "TIME LIMIT")
   expect(c.io.out, 4)
@@ -137,7 +137,7 @@ class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
     poke(c.top.io.boot, 1)
     step(1)
   }
-  def tick()  = {
+  def tick_()  = {
     poke(c.top.io.isWr, 0)
     poke(c.top.io.boot, 0)
     step(1)
@@ -154,7 +154,7 @@ class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
   boot()
   var k = 0
   do {
-    tick(); k += 1
+    tick_(); k += 1
   } while (peek(c.top.io.valid) == 0 && k < 10)
   expect(k < 10, "TIME LIMIT")
   expect(c.top.io.out, 4)
