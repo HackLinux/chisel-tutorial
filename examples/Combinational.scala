@@ -40,7 +40,7 @@ class CombinationalDaisyTests(c: Combinational) extends DaisyTester(c) {
 
 class CombinationalWrapper extends DaisyWrapper(new Combinational)
  
-class CombinationalWrapperTests(c: CombinationalWrapper) extends DaisyTester(c) {
+class CombinationalWrapperTests(c: CombinationalWrapper) extends DaisyWrapperTester(c) {
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
