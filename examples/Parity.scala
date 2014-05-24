@@ -32,7 +32,7 @@ class ParityTests(c: Parity) extends Tester(c, isLoggingPokes = true) {
 // same as ParityTests but extends DaisyTester
 class ParityDaisyTests(c: Parity) extends DaisyTester(c) {
   var isOdd = 0
-  for (t <- 0 until 10) {
+  for (t <- 0 until 50) {
     val bit = rnd.nextInt(2)
     poke(c.io.in, bit)
     step(1)
@@ -45,7 +45,7 @@ class ParityWrapper extends DaisyWrapper(new Parity)
 
 class ParityWrapperTests(c: ParityWrapper) extends DaisyWrapperTester(c) {
   var isOdd = 0
-  for (t <- 0 until 10) {
+  for (t <- 0 until 50) {
     val bit = rnd.nextInt(2)
     poke(c.top.io.in, bit)
     step(1)

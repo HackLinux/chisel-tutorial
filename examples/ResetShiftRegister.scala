@@ -44,7 +44,7 @@ class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c, isLogging
 class ResetShiftRegisterDaisyTests(c: ResetShiftRegister) extends DaisyTester(c) {  
   val ins = Array.fill(5){ 0 }
   var k   = 0
-  for (n <- 0 until 16) {
+  for (n <- 0 until 64) {
     val in    = rnd.nextInt(2)
     val shift = rnd.nextInt(2)
     if (shift == 1) 
@@ -63,7 +63,7 @@ class ResetShiftRegisterWrapper extends DaisyWrapper(new ResetShiftRegister)
 class ResetShiftRegisterWrapperTests(c: ResetShiftRegisterWrapper) extends DaisyWrapperTester(c) {
   val ins = Array.fill(5){ 0 }
   var k   = 0
-  for (n <- 0 until 16) {
+  for (n <- 0 until 64) {
     val in    = rnd.nextInt(2)
     val shift = rnd.nextInt(2)
     if (shift == 1) 

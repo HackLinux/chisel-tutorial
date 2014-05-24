@@ -67,11 +67,11 @@ class StackTests(c: Stack) extends Tester(c, isLoggingPokes = true) {
 }
 
 // same as StackTests but extends DaisyTester
-class StackDaisyTests(c: Stack) extends DaisyTester(c) {  
+class StackDaisyTests(c: Stack) extends DaisyTester(c, false) {  
   var nxtDataOut = 0
   val stack = new ScalaStack[Int]()
 
-  for (t <- 0 until 16) {
+  for (t <- 0 until 200) {
     val enable  = rnd.nextInt(2)
     val push    = rnd.nextInt(2)
     val pop     = rnd.nextInt(2)
