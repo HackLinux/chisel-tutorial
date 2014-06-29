@@ -2,7 +2,7 @@ package TutorialExamples
 
 import Chisel._
 
-class Risc extends Module {
+class RiscSRAM extends Module {
   val io = new Bundle {
     val isWr   = Bool(INPUT)
     val wrAddr = UInt(INPUT, 8)
@@ -98,7 +98,7 @@ class Risc extends Module {
   counter(Ones, pc)
 }
 
-class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {  
+class RiscSRAMTests(c: RiscSRAM) extends Tester(c, isLoggingPokes = true) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())
@@ -191,8 +191,8 @@ class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {
   expect(c.io.out, 40)
 }
 
-// same as RiscTests but extends DaisyTester
-class RiscDaisyTests(c: Risc) extends DaisyTester(c, true) {  
+// same as RiscSRAMTests but extends DaisyTester
+class RiscSRAMDaisyTests(c: RiscSRAM) extends DaisyTester(c, false) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())
@@ -282,12 +282,12 @@ class RiscDaisyTests(c: Risc) extends DaisyTester(c, true) {
     tick(); k += 1
   } while (peek(c.io.valid) == 0 && k < 400)
   expect(k < 400, "TIME LIMIT")
-  expect(c.io.out, *40)
+  expect(c.io.out, 40)
 }
 
-class RiscWrapper extends DaisyWrapper(new Risc)
+class RiscSRAMWrapper extends DaisyWrapper(new RiscSRAM)
 
-class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
+class RiscSRAMWrapperTests(c: RiscSRAMWrapper) extends DaisyWrapperTester(c, false) {
   def wr(addr: UInt, data: UInt)  = {
     poke(c.top.io.isWr,   1)
     poke(c.top.io.wrAddr, addr.litValue())

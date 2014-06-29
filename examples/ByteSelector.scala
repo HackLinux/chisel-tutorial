@@ -27,7 +27,7 @@ class ByteSelector extends Module {
   counter(Negedge, io.offset)
 }
 
-class ByteSelectorTests(c: ByteSelector) extends Tester(c, isLoggingPokes = true) {
+class ByteSelectorTests(c: ByteSelector) extends Tester(c) {
   val test_in = 12345678
   for (t <- 0 until 4) {
     poke(c.io.in,     test_in)

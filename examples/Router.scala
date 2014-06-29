@@ -44,7 +44,7 @@ class Router extends Module {
   counter(Negedge, io.writes.valid, io.in.valid)
 }
 
-class RouterTests(c: Router) extends Tester(c, isLoggingPokes = true) {  
+class RouterTests(c: Router) extends Tester(c) {  
   def rd(addr: Int, data: Int) = {
     poke(c.io.in.valid,        0)
     poke(c.io.writes.valid,    0)

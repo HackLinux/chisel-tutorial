@@ -27,7 +27,7 @@ class MemorySearch extends Module {
   counter(io.address)
 }
 
-class MemorySearchTests(c: MemorySearch) extends Tester(c, isLoggingPokes = true) {
+class MemorySearchTests(c: MemorySearch) extends Tester(c) {
   val list = c.elts.map(int(_)) 
   val n = 8
   val maxT = n * (list.length + 3)

@@ -54,7 +54,7 @@ class SimpleALU extends Module {
   counter(Default, io.output)
 }
 
-class SimpleALUTests(c: SimpleALU) extends Tester(c, isLoggingPokes = true) {  
+class SimpleALUTests(c: SimpleALU) extends Tester(c) {  
   for (n <- 0 until 64) {
     val a      = rnd.nextInt(16)
     val b      = rnd.nextInt(16)

@@ -42,7 +42,7 @@ class Adder4 extends Module {
   counter(s0, s1, s2, io.Sum)
 }
 
-class Adder4Tests(c: Adder4) extends Tester(c, isLoggingPokes = true) {  
+class Adder4Tests(c: Adder4) extends Tester(c) {  
   val rnd2 = rnd.nextInt(2)
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(16)

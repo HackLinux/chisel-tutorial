@@ -36,7 +36,7 @@ class Adder(val n:Int) extends Module {
     counter(Negedge, sum(i))
 }
 
-class AdderTests(c: Adder) extends Tester(c, isLoggingPokes = true) {
+class AdderTests(c: Adder) extends Tester(c) {
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(c.n)
     val rnd1 = rnd.nextInt(c.n)

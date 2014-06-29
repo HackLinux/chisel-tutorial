@@ -13,7 +13,7 @@ class Combinational extends Module {
   counter(sum)
 }
 
-class CombinationalTests(c: Combinational) extends Tester(c, isLoggingPokes = true) {
+class CombinationalTests(c: Combinational) extends Tester(c) {
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)

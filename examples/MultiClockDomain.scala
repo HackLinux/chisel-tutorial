@@ -42,7 +42,7 @@ class MultiClockDomain extends Module {
   counter(Activity, io.start)
 }
 
-class MultiClockDomainTests(c: MultiClockDomain) extends Tester(c, isLoggingPokes = true) {
+class MultiClockDomainTests(c: MultiClockDomain) extends Tester(c) {
   // setting up clocks
   val clocks = new HashMap[Clock, Int]
   clocks(Driver.implicitClock) = 2

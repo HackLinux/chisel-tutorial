@@ -16,7 +16,7 @@ class HiLoMultiplier() extends Module {
   counter(Activity, mult)
 }
 
-class HiLoMultiplierTests(c: HiLoMultiplier) extends Tester(c, isLoggingPokes = true) {
+class HiLoMultiplierTests(c: HiLoMultiplier) extends Tester(c) {
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(65535)
     val rnd1 = rnd.nextInt(65535)

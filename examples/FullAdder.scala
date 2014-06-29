@@ -23,7 +23,7 @@ class FullAdder extends Module {
   counter(Ones, io.sum)
 }
 
-class FullAdderTests(c: FullAdder) extends Tester(c, isLoggingPokes = true) {  
+class FullAdderTests(c: FullAdder) extends Tester(c) {  
   for (t <- 0 until 4) {
     val a    = rnd.nextInt(2)
     val b    = rnd.nextInt(2)

@@ -15,7 +15,7 @@ class Functional extends Module {
   counter(io.z)
 }
 
-class FunctionalTests(c: Functional) extends Tester(c, isLoggingPokes = true) {
+class FunctionalTests(c: Functional) extends Tester(c) {
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
