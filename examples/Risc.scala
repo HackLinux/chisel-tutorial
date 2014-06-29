@@ -11,8 +11,8 @@ class Risc extends Module {
     val valid  = Bool(OUTPUT)
     val out    = Bits(OUTPUT, 32)
   }
-  val file = Mem(Bits(width = 32), 16/*256*/)
-  val code = Mem(Bits(width = 32), 16/*256*/)
+  val file = Mem(Bits(width = 32), 256)
+  val code = Mem(Bits(width = 32), 256)
   val pc   = Reg(init=UInt(0, 8))
   
   val add_op :: imm_op :: Nil = Enum(Bits(), 2)
@@ -48,11 +48,9 @@ class Risc extends Module {
     }
     pc := pc + UInt(1)
   }
-  counter(Activity, ra, rb, rc)
-  counter(Ones, pc)
 }
 
-class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {  
+class RiscTests(c: Risc) extends Tester(c) {  
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
     poke(c.io.wrAddr, addr.litValue())
@@ -64,7 +62,7 @@ class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {
     poke(c.io.boot, 1)
     step(1)
   }
-  def tick_()  = {
+  def tick()  = {
     poke(c.io.isWr, 0)
     poke(c.io.boot, 0)
     step(1)
@@ -81,81 +79,8 @@ class RiscTests(c: Risc) extends Tester(c, isLoggingPokes = true) {
   boot()
   var k = 0
   do {
-    tick_(); k += 1
+    tick(); k += 1
   } while (peek(c.io.valid) == 0 && k < 10)
   expect(k < 10, "TIME LIMIT")
   expect(c.io.out, 4)
-}
-
-// same as RiscTests but extends DaisyTester
-class RiscDaisyTests(c: Risc) extends DaisyTester(c, false) {  
-  def wr(addr: UInt, data: UInt)  = {
-    poke(c.io.isWr,   1)
-    poke(c.io.wrAddr, addr.litValue())
-    poke(c.io.wrData, data.litValue())
-    step(1)
-  }
-  def boot()  = {
-    poke(c.io.isWr, 0)
-    poke(c.io.boot, 1)
-    step(1)
-  }
-  def tick_()  = {
-    poke(c.io.isWr, 0)
-    poke(c.io.boot, 0)
-    step(1)
-  }
-  def I (op: UInt, rc: Int, ra: Int, rb: Int) = 
-    Cat(op, UInt(rc, 8), UInt(ra, 8), UInt(rb, 8))
-  val app  = Array(I(c.imm_op,   1, 0, 1), // r1 <- 1
-                   I(c.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.add_op, 255, 1, 0)) // rh <- r1
-  wr(UInt(0), Bits(0)) // skip reset
-  for (addr <- 0 until app.length) 
-    wr(UInt(addr), app(addr))
-  boot()
-  var k = 0
-  do {
-    tick_(); k += 1
-  } while (peek(c.io.valid) == 0 && k < 10)
-  expect(k < 10, "TIME LIMIT")
-  expect(c.io.out, 4)
-}
-
-class RiscWrapper extends DaisyWrapper(new Risc)
-
-class RiscWrapperTests(c: RiscWrapper) extends DaisyWrapperTester(c, false) {
-  def wr(addr: UInt, data: UInt)  = {
-    poke(c.top.io.isWr,   1)
-    poke(c.top.io.wrAddr, addr.litValue())
-    poke(c.top.io.wrData, data.litValue())
-    step(1)
-  }
-  def boot()  = {
-    poke(c.top.io.isWr, 0)
-    poke(c.top.io.boot, 1)
-    step(1)
-  }
-  def tick_()  = {
-    poke(c.top.io.isWr, 0)
-    poke(c.top.io.boot, 0)
-    step(1)
-  }
-  def I (op: UInt, rc: Int, ra: Int, rb: Int) = 
-    Cat(op, UInt(rc, 8), UInt(ra, 8), UInt(rb, 8))
-  val app  = Array(I(c.top.imm_op,   1, 0, 1), // r1 <- 1
-                   I(c.top.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.top.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.top.add_op, 255, 1, 0)) // rh <- r1
-  wr(UInt(0), Bits(0)) // skip reset
-  for (addr <- 0 until app.length) 
-    wr(UInt(addr), app(addr))
-  boot()
-  var k = 0
-  do {
-    tick_(); k += 1
-  } while (peek(c.top.io.valid) == 0 && k < 10)
-  expect(k < 10, "TIME LIMIT")
-  expect(c.top.io.out, 4)
 }

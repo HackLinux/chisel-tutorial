@@ -37,7 +37,7 @@ class GCDTests(c: GCD) extends Tester(c, isLoggingPokes = true) {
 }
 
 // same as GCDTests but extends DaisyTester
-class GCDDaisyTests(c: GCD) extends DaisyTester(c) {
+class GCDDaisyTests(c: GCD) extends DaisyTester(c, false) {
   val (a, b, z) = (2128, 2, 2)
   do {
     val first = if (t == 0) 1 else 0;
@@ -51,7 +51,7 @@ class GCDDaisyTests(c: GCD) extends DaisyTester(c) {
 
 class GCDWrapper extends DaisyWrapper(new GCD)
 
-class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c) {
+class GCDWrapperTests(c: GCDWrapper) extends DaisyWrapperTester(c, false) {
   val (a, b, z) = (2128, 2, 2)
   do {
     val first = if (t == 0) 1 else 0;

@@ -25,7 +25,6 @@ class ByteSelector extends Module {
   }
 
   counter(Negedge, io.offset)
-  counter(Zeros, a, b, c, d)
 }
 
 class ByteSelectorTests(c: ByteSelector) extends Tester(c, isLoggingPokes = true) {

@@ -17,7 +17,7 @@ class ShiftRegister extends Module {
 
 class ShiftRegisterTests(c: ShiftRegister) extends Tester(c, isLoggingPokes = true) {  
   val reg     = Array.fill(4){ 0 }
-  for (t <- 0 until 64) {
+  for (t <- 0 until 200) {
     val in = rnd.nextInt(2)
     poke(c.io.in, in)
     step(1)
@@ -29,9 +29,9 @@ class ShiftRegisterTests(c: ShiftRegister) extends Tester(c, isLoggingPokes = tr
 }
 
 // same as ShiftRegisterTests but extends DaisyTester
-class ShiftRegisterDaisyTests(c: ShiftRegister) extends DaisyTester(c) {  
+class ShiftRegisterDaisyTests(c: ShiftRegister) extends DaisyTester(c, false) {  
   val reg     = Array.fill(4){ 0 }
-  for (t <- 0 until 64) {
+  for (t <- 0 until 200) {
     val in = rnd.nextInt(2)
     poke(c.io.in, in)
     step(1)
@@ -44,9 +44,9 @@ class ShiftRegisterDaisyTests(c: ShiftRegister) extends DaisyTester(c) {
 
 class ShiftRegisterWrapper extends DaisyWrapper(new ShiftRegister)
 
-class ShiftRegisterWrapperTests(c: ShiftRegisterWrapper) extends DaisyWrapperTester(c) {
+class ShiftRegisterWrapperTests(c: ShiftRegisterWrapper) extends DaisyWrapperTester(c, false) {
   val reg     = Array.fill(4){ 0 }
-  for (t <- 0 until 64) {
+  for (t <- 0 until 200) {
     val in = rnd.nextInt(2)
     poke(c.top.io.in, in)
     step(1)
